@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sharukh Khan — Marquee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  /* Light mode, background matched to hansonwu.com warm off-white */
+  --paper:#F6F6F7;
+  --paper-2:#FCFCFD;
+  --ink:#1B1714;
+  --ink-soft:#6A6157;
+  --line:#E4E3E7;
+  --accent:#6C40E6; --accent-ink:#5a32d6;
+  --t1:#D98A6A; --t2:#9CAE8E; --t3:#E6C66E; --t4:#E2A9A0; --t5:#B6A6E0; --t6:#9CB7C7;
+  --serif:"Instrument Serif",Georgia,serif;
+  --sans:"Schibsted Grotesk",system-ui,sans-serif;
+  --mono:"Space Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+html.smooth{scroll-behavior:smooth}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:17px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  transition:background .45s ease,color .45s ease;
+}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--accent);color:#fff}
+
+/* ---------- custom cursor ---------- */
+.cursor{position:fixed;top:0;left:0;width:14px;height:14px;border-radius:50%;
+  background:var(--accent);pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);mix-blend-mode:normal;
+  transition:width .25s cubic-bezier(.2,.8,.2,1),height .25s cubic-bezier(.2,.8,.2,1),background .25s,opacity .3s;}
+.cursor.lg{width:84px;height:84px;background:var(--accent);}
+.cursor.sm{width:8px;height:8px;}
+.cursor .lbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-family:var(--mono);font-size:11px;letter-spacing:.04em;opacity:0;transition:opacity .2s;text-transform:uppercase}
+.cursor.lg .lbl{opacity:1}
+.cursor-ring{position:fixed;top:0;left:0;width:34px;height:34px;border:1.5px solid var(--ink);
+  border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.5;
+  transition:opacity .3s, width .3s, height .3s}
+.cursor-ring.hide{opacity:0}
+@media (hover:none){.cursor,.cursor-ring{display:none}}
+
+/* ---------- nav ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:120;display:flex;align-items:center;justify-content:space-between;
+  padding:22px clamp(20px,4vw,56px);mix-blend-mode:normal;}
+nav .brand{font-family:var(--serif);font-size:23px;letter-spacing:.01em;white-space:nowrap}
+nav .brand b{font-weight:400}
+nav .links{display:flex;gap:28px;align-items:center;font-size:15px}
+nav .links a{position:relative;padding:4px 0}
+nav .links a .u{position:absolute;left:0;bottom:0;height:1.5px;width:100%;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+nav .links a:hover .u{transform:scaleX(1)}
+.avail{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;color:var(--ink-soft)}
+.avail .dot{width:8px;height:8px;border-radius:50%;background:#3FbF7F;position:relative}
+.avail .dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:#3FbF7F;animation:ping 2s ease-out infinite}
+@keyframes ping{0%{transform:scale(1);opacity:.7}100%{transform:scale(2.6);opacity:0}}
+.theme-toggle{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;display:grid;place-items:center;position:relative;transition:background .3s,transform .3s,border-color .3s;font-size:15px;line-height:1;flex-shrink:0}
+.theme-toggle:hover{transform:translateY(-2px) rotate(10deg);border-color:var(--accent)}
+.theme-toggle .ico{position:absolute;transition:opacity .35s,transform .45s cubic-bezier(.34,1.56,.64,1)}
+.theme-toggle .moon{opacity:0;transform:scale(.3) rotate(-50deg)}
+html[data-theme="dark"] .theme-toggle .sun{opacity:0;transform:scale(.3) rotate(50deg)}
+html[data-theme="dark"] .theme-toggle .moon{opacity:1;transform:none}
+
+/* ---------- hero ---------- */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+  padding:120px clamp(20px,4vw,56px) 104px;position:relative}
+.hero .kicker{font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);
+  display:flex;align-items:center;gap:14px;margin-bottom:30px}
+.hero .kicker .ln{height:1px;width:54px;background:var(--line)}
+.h1{font-family:var(--serif);font-weight:400;font-size:clamp(34px,9vw,129px);line-height:1.04;letter-spacing:-.01em;max-width:none}
+.h1 .it{font-style:italic;color:var(--accent)}
+.h1 .word{display:inline-block}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,0.75fr);gap:clamp(24px,3vw,52px);align-items:center;width:100%}
+.hero-text{min-width:0}
+.hero-art{display:flex;justify-content:center;align-items:center;min-width:0}
+.hero-art img{width:clamp(290px,34vw,470px);max-width:100%;height:auto;display:block;animation:floaty 6.5s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-14px) rotate(-1.6deg)}}
+.hero .sub{margin-top:clamp(40px,4.5vw,64px);display:flex;flex-wrap:wrap;gap:18px 34px;align-items:flex-end;max-width:760px}
+.hero .sub p{font-size:18px;color:var(--ink-soft);max-width:46ch;line-height:1.55}
+.hero .scroll{position:absolute;left:clamp(20px,4vw,56px);bottom:34px;display:flex;align-items:center;gap:12px;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+.hero .scroll .arr{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;animation:bob 1.8s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+
+/* interests marquee */
+.marq{position:absolute;right:clamp(20px,4vw,56px);bottom:40px;width:min(320px,40vw);overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent);mask-image:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent)}
+.marq .track{display:flex;gap:0;white-space:nowrap;width:max-content;animation:scrollx 18s linear infinite}
+.marq .track span{font-family:var(--serif);font-style:italic;font-size:21px;color:var(--ink);padding:0 18px;opacity:.65}
+.marq .track span::after{content:"✺";color:var(--accent);margin-left:36px;font-style:normal}
+@keyframes scrollx{to{transform:translateX(-50%)}}
+
+/* ---------- section heads ---------- */
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;
+  padding:0 clamp(20px,4vw,56px);margin:30px 0 38px}
+.sec-head h2{font-family:var(--serif);font-size:clamp(26px,3vw,40px);font-weight:400}
+.sec-head .idx{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+
+/* ---------- work ---------- */
+.work{padding:40px 0 30px}
+.proj{display:grid;grid-template-columns:1fr;border-top:1px solid var(--line);position:relative}
+.proj-inner{display:grid;grid-template-columns:0.9fr 1.1fr;grid-template-rows:auto auto;column-gap:clamp(20px,4vw,56px);row-gap:0;align-items:center;
+  padding:clamp(26px,3.5vw,52px) clamp(20px,4vw,56px)}
+.meta{grid-column:1;grid-row:1}
+.go{grid-column:1;grid-row:2}
+.cover{grid-column:2;grid-row:1 / span 2}
+.proj:nth-child(even) .proj-inner{grid-template-columns:1.1fr 0.9fr}
+.proj:nth-child(even) .meta{grid-column:2;grid-row:1}
+.proj:nth-child(even) .go{grid-column:2;grid-row:2}
+.proj:nth-child(even) .cover{grid-column:1;grid-row:1 / span 2}
+.cover{position:relative;aspect-ratio:4/3;border-radius:18px;overflow:hidden;will-change:transform;align-self:center}
+.cover .art{position:absolute;inset:0;transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.proj:hover .cover .art{transform:scale(1.05)}
+.cover .badge{position:absolute;top:14px;left:14px;z-index:3;font-family:var(--mono);font-size:11px;color:#1B1714;
+  background:rgba(255,255,255,.85);backdrop-filter:blur(4px);padding:5px 10px;border-radius:20px;letter-spacing:.03em}
+.cover .device{position:absolute;z-index:2;border-radius:22px;background:#fff;box-shadow:0 30px 60px -20px rgba(0,0,0,.35);overflow:hidden}
+.meta .num{font-family:var(--mono);font-size:13px;color:var(--ink-soft);letter-spacing:.06em}
+.meta h3{font-family:var(--serif);font-size:clamp(30px,4vw,54px);font-weight:400;line-height:1.08;margin:12px 0 20px;letter-spacing:-.01em}
+.meta .desc{color:var(--ink-soft);max-width:42ch;font-size:16.5px}
+.meta .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.meta .tags span{font-family:var(--mono);font-size:11.5px;border:1px solid var(--line);border-radius:20px;padding:6px 13px;color:var(--ink-soft)}
+.go{display:inline-flex;align-items:center;gap:10px;margin-top:26px;font-weight:600;font-size:15px}
+.go .circle{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;transition:transform .4s cubic-bezier(.2,.8,.2,1),background .3s}
+.proj:hover .go .circle{transform:rotate(45deg);background:var(--accent)}
+.proj:last-child{border-bottom:1px solid var(--line)}
+
+/* ---------- about teaser ---------- */
+.about{padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px);display:grid;grid-template-columns:0.92fr 1.08fr;gap:clamp(30px,5vw,72px);align-items:start}
+.about .portrait{position:relative;aspect-ratio:4/5;border-radius:20px;overflow:hidden;background:linear-gradient(150deg,var(--t5),var(--t4));max-width:460px;width:100%}
+.about .portrait .ph{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:12px;color:rgba(0,0,0,.7);text-align:center;padding:20px}
+.about .portrait .np{position:absolute;bottom:16px;right:16px;z-index:4;display:flex;align-items:center;gap:11px;text-decoration:none}
+.about .portrait .np .cap{background:var(--paper);border-radius:30px;padding:9px 15px;box-shadow:0 12px 30px -12px rgba(0,0,0,.4);
+  display:flex;flex-direction:column;gap:2px;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
+.about .portrait .np .cap .lbl{font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-soft);
+  display:flex;align-items:center;gap:6px;line-height:1}
+.about .portrait .np .cap .song{font-family:var(--serif);font-size:13.5px;color:var(--ink);line-height:1.12;white-space:nowrap}
+.about .portrait .np .cap .song .by{color:var(--ink-soft);font-style:italic}
+.about .portrait .np .cap .song .ext{color:var(--ink-soft);font-family:var(--mono);font-size:11px}
+.about .portrait .np .eq{display:inline-flex;align-items:flex-end;gap:1.5px;height:9px}
+.about .portrait .np .eq i{width:2px;height:40%;background:var(--accent);border-radius:1px;animation:eqbar .9s ease-in-out infinite}
+.about .portrait .np .eq i:nth-child(2){animation-delay:.28s}
+.about .portrait .np .eq i:nth-child(3){animation-delay:.55s}
+@keyframes eqbar{0%,100%{height:28%}50%{height:100%}}
+.about .portrait .np .disc{width:76px;height:76px;border-radius:50%;flex:none;position:relative;
+  background:repeating-radial-gradient(circle at 50% 50%, #181818 0 1.4px, #050505 1.4px 2.9px), #000;
+  box-shadow:0 14px 30px -12px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.05);
+  animation:spin 7s linear infinite}
+.about .portrait .np .disc::before{content:"";position:absolute;inset:8%;border-radius:50%;
+  background:radial-gradient(circle at 38% 32%,rgba(255,255,255,.16),transparent 55%)}
+.about .portrait .np .disc .label{position:absolute;inset:30%;border-radius:50%;overflow:hidden;box-shadow:0 0 0 2px rgba(0,0,0,.45)}
+.about .portrait .np .disc .label img{width:100%;height:100%;object-fit:cover;display:block}
+.about .portrait .np .disc .hole{position:absolute;inset:46.5%;border-radius:50%;background:var(--paper);box-shadow:inset 0 0 0 1px rgba(0,0,0,.35)}
+.about .portrait .np:hover .cap{transform:translateY(-3px);box-shadow:0 18px 36px -14px rgba(0,0,0,.5)}
+.about .portrait .np:hover .disc{box-shadow:0 18px 36px -12px rgba(0,0,0,.7),inset 0 0 0 1px rgba(255,255,255,.08)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.about h2{font-family:var(--serif);font-size:clamp(30px,4.5vw,58px);font-weight:400;line-height:1.05;letter-spacing:-.01em}
+.about h2 .it{font-style:italic;color:var(--accent)}
+.about p{margin-top:22px;color:var(--ink-soft);font-size:17.5px;max-width:52ch}
+.about .skills{margin-top:38px;padding-top:32px;border-top:1px solid var(--line);
+  display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,2.6vw,38px)}
+.about .skills .k{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:14px}
+.about .skills ul{list-style:none}
+.about .skills li{font-size:14.5px;color:var(--ink);line-height:1.62}
+.about .actions{display:flex;gap:16px;margin-top:30px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border-radius:40px;font-weight:600;font-size:15px;border:1px solid var(--ink);transition:background .3s,color .3s,transform .3s}
+.btn.solid{background:var(--ink);color:var(--paper)}
+.btn:hover{transform:translateY(-2px)}
+.btn.solid:hover{background:var(--accent);border-color:var(--accent)}
+.btn.ghost:hover{background:var(--ink);color:var(--paper)}
+
+/* footer hidden until JS injects the work cards, so it never flashes at the top on first paint */
+footer{visibility:hidden}
+html.loaded footer{visibility:visible}
+/* ---------- footer ---------- */
+footer{padding:60px clamp(20px,4vw,56px) 40px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px}
+footer .big{font-family:var(--serif);font-size:clamp(34px,7vw,90px);line-height:.95;font-weight:400}
+footer .big .it{font-style:italic;color:var(--accent)}
+footer .col{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);line-height:2}
+footer .col a:hover{color:var(--accent)}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+@media (max-width:860px){
+  .proj-inner,.proj:nth-child(even) .proj-inner{grid-template-columns:1fr;grid-template-rows:none;row-gap:0;
+    padding:42px clamp(20px,5vw,40px)}
+  .meta,.proj:nth-child(even) .meta{grid-column:1;grid-row:auto;order:0}
+  .cover,.proj:nth-child(even) .cover{grid-column:1;grid-row:auto;order:1;margin-top:24px}
+  .go,.proj:nth-child(even) .go{grid-column:1;grid-row:auto;order:2;margin-top:22px;
+    justify-self:start;padding:13px 22px;border:1px solid var(--ink);border-radius:40px}
+  .about{grid-template-columns:1fr}
+  .about .skills{grid-template-columns:1fr 1fr;gap:24px 28px}
+  .hero{min-height:auto;justify-content:flex-start;padding:92px clamp(20px,4vw,56px) 44px}
+  .hero-grid{display:flex;flex-direction:column;gap:22px}
+  .hero-art{order:-1;justify-content:center}
+  .hero-art img{width:min(64vw,270px);max-width:270px;margin:0}
+  .hero .kicker{margin-bottom:16px}
+  .hero .sub{margin-top:22px}
+  .h1{font-size:clamp(46px,13vw,72px);line-height:1.05}
+  nav{padding-top:16px;padding-bottom:16px}
+  nav .avail{display:none}
+  nav .links{gap:18px;font-size:14px}
+  .marq{display:none}
+  .hero .scroll{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .reveal{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"><span class="lbl" id="curLbl">View</span></div>
+<div class="cursor-ring" id="ring"></div>
+
+<nav>
+  <a class="brand" href="#top"><b>Sharukh</b> Khan</a>
+  <div class="links">
+    <span class="avail"><span class="dot"></span>Open to work</span>
+    <a href="#work">Work<span class="u"></span></a>
+    <a href="#about">About<span class="u"></span></a>
+    <a href="https://www.linkedin.com/in/sharukh-khan-7085bab7/" target="_blank" rel="noopener">LinkedIn<span class="u"></span></a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-grid">
+    <div class="hero-text">
+      <div class="kicker reveal" style="transition-delay:.16s"><span class="ln"></span>Product Designer · Healthcare &amp; SaaS</div>
+      <h1 class="h1 reveal" style="transition-delay:.26s">Mobile-first designer crafting <span class="it">experiences</span> that ship.</h1>
+      
+      <div class="sub reveal" style="transition-delay:.36s">
+        <p>I have 8+ years of experience designing mobile-first products for complex ecosystems — healthcare, SaaS, fintech — while making them pleasant for everyone to use.</p>
+      </div>
+    </div>
+    <div class="hero-art reveal"><img src="assets/bubble-green.svg" alt="Illustration of Sharukh Khan working on a laptop" /></div>
+  </div>
+  <div class="scroll"><span class="arr">↓</span> Scroll to explore</div>
+  <div class="marq" aria-hidden="true">
+    <div class="track">
+      <span>Accessibility</span><span>Experimentation</span><span>Mobile Design</span><span>AI Native</span><span>Design Systems</span><span>Boba</span>
+      <span>Accessibility</span><span>Experimentation</span><span>Mobile Design</span><span>AI Native</span><span>Design Systems</span><span>Boba</span>
+    </div>
+  </div>
+</header>
+
+<section class="work" id="work">
+  <div class="sec-head reveal">
+    <h2>Selected Work</h2>
+    <span class="idx">Six projects · 2021—2026</span>
+  </div>
+  <div id="projList"></div>
+</section>
+
+<section class="about" id="about">
+  <div class="portrait reveal">
+    <img class="ph" src="assets/portrait.jpg" alt="Portrait of Sharukh Khan" style="width:100%;height:100%;padding:0;object-fit:cover;object-position:center top"/>
+    <a class="np" href="https://open.spotify.com/track/7KVIuHxbV5lvBE5Vyiw8FC" target="_blank" rel="noopener" aria-label="Now spinning: I Care by Turnstile — open on Spotify">
+      <span class="cap">
+        <span class="lbl"><span class="eq"><i></i><i></i><i></i></span> Now spinning</span>
+        <span class="song">I Care <span class="by">— Turnstile</span> <span class="ext">↗</span></span>
+      </span>
+      <span class="disc"><span class="label"><img src="assets/now-playing.png" alt="Never Enough — Turnstile"/></span><span class="hole"></span></span>
+    </a>
+  </div>
+  <div class="reveal">
+    <h2>Hi, I'm Sharukh — a designer with a <span class="it">passion for storytelling.</span></h2>
+    <p>Eight years in, I've spent most of them turning complicated, multi-user systems into mobile experiences people actually enjoy. I led ServiceTitan's first native app and was lead designer on award-winning healthcare apps for the National Eczema Association and the National Institutes of Health, with further work across SaaS, fintech, and IoT.</p>
+    <p>I think of design as storytelling: every screen is quietly making the case for what to do next. I care most about the small stuff that makes that case land, the interaction that feels effortless, the flow that removes a step, the detail that earns trust. Off the clock it's usually music, games, and the hunt for a decent boba.</p>
+    <div class="skills reveal">
+      <div class="skill-col">
+        <div class="k">Design</div>
+        <ul>
+          <li>Product &amp; Mobile Design</li>
+          <li>iOS &amp; Android Native</li>
+          <li>Design Systems</li>
+          <li>Information Architecture</li>
+          <li>Motion Design</li>
+        </ul>
+      </div>
+      <div class="skill-col">
+        <div class="k">Research &amp; Methods</div>
+        <ul>
+          <li>User Research</li>
+          <li>Usability Testing</li>
+          <li>Journey Mapping</li>
+          <li>A/B Testing</li>
+          <li>AI-Assisted Prototyping</li>
+        </ul>
+      </div>
+      <div class="skill-col">
+        <div class="k">Tools</div>
+        <ul>
+          <li>Figma</li>
+          <li>Adobe After Effects</li>
+          <li>Claude Code</li>
+          <li>Atlassian</li>
+          <li>HTML / CSS</li>
+        </ul>
+      </div>
+    </div>
+    <div class="actions">
+      <a class="btn solid" href="assets/Sharukh-Khan-Resume-2026.pdf" target="_blank" rel="noopener" data-cursor>View résumé →</a>
+      <a class="btn ghost" href="https://www.linkedin.com/in/sharukh-khan-7085bab7/" target="_blank" rel="noopener" data-cursor>LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="big reveal">Let's make<br>something <span class="it">wonderful.</span></div>
+  <div class="col reveal">
+    <a href="https://www.linkedin.com/in/sharukh-khan-7085bab7/" target="_blank" rel="noopener">LinkedIn ↗</a><br>
+    <a href="#work">Work</a><br>
+    <a href="#about">About</a><br>
+    <span style="opacity:.6">© 2026 Sharukh Khan</span>
+  </div>
+</footer>
+
+<script>
+const PROJECTS=[
+  {n:"01",slug:"servicetitan",name:"Inventory by ServiceTitan",tint:"var(--t1)",tint2:"#c2613f",badge:"SaaS · iOS &amp; Android",desc:"A barcode-scanning mobile app that cut item-counting time by 54% — the company's first native app on the App Store.",tags:["Sr. Product Designer","Design System","A/B Testing"],motif:"scan"},
+  {n:"02",slug:"eczemawise",name:"EczemaWise",tint:"var(--t2)",tint2:"#728a5f",badge:"Healthcare · Award-winning",desc:"A symptom-tracking companion for the National Eczema Association, helping patients understand their skin over time.",tags:["Mobile","Patient Care","Data Viz"],motif:"chart"},
+  {n:"03",slug:"origin",name:"Origin Investments",tint:"var(--t3)",tint2:"#c79f34",badge:"Fintech · React Native",desc:"A REIT portfolio builder that turns risk scores and allocations into a clear, confident investment decision.",tags:["Fintech","Data Viz","Mobile"],motif:"coins"},
+  {n:"04",slug:"nih",name:"National Institutes of Health",tint:"var(--t5)",tint2:"#7d6bc0",badge:"Healthcare · Coming soon",desc:"An award-winning research experience for the NIH. Full case study landing soon — peek back shortly.",tags:["Research","Coming soon"],motif:"soon"},
+  {n:"05",slug:"bms",name:"Bristol Myers Squibb",tint:"var(--t4)",tint2:"#c47b71",badge:"Pharma · Healthcare",desc:"Patient-facing tools for one of the world's largest pharmaceutical companies, designed for trust and clarity.",tags:["Healthcare","Mobile"],motif:"pulse"},
+  {n:"06",slug:"sleeplife",name:"SleepLife",tint:"var(--t6)",tint2:"#6f93a6",badge:"Healthcare · Remote Monitoring",desc:"Remote patient monitoring that moved the National Sleep Foundation's clinical trials out of the lab and into the home.",tags:["Healthcare","Wearables","Mobile"],motif:"moon"},
+];
+function motifSVG(m){
+  const c='rgba(255,255,255,.9)',c2='rgba(255,255,255,.35)';
+  if(m==='scan')return `<rect x='40' y='70' width='220' height='150' rx='14' fill='${c}'/><line x1='70' y1='145' x2='230' y2='145' stroke='var(--accent)' stroke-width='4'/><rect x='70' y='95' width='6' height='100' fill='#1B1714'/><rect x='84' y='95' width='3' height='100' fill='#1B1714'/><rect x='94' y='95' width='8' height='100' fill='#1B1714'/><rect x='110' y='95' width='4' height='100' fill='#1B1714'/><rect x='122' y='95' width='9' height='100' fill='#1B1714'/><rect x='140' y='95' width='4' height='100' fill='#1B1714'/><rect x='152' y='95' width='7' height='100' fill='#1B1714'/><rect x='168' y='95' width='4' height='100' fill='#1B1714'/><rect x='182' y='95' width='9' height='100' fill='#1B1714'/><rect x='200' y='95' width='4' height='100' fill='#1B1714'/><rect x='212' y='95' width='7' height='100' fill='#1B1714'/>`;
+  if(m==='chart')return `<circle cx='150' cy='145' r='78' fill='none' stroke='${c2}' stroke-width='20'/><circle cx='150' cy='145' r='78' fill='none' stroke='${c}' stroke-width='20' stroke-dasharray='330 490' stroke-linecap='round' transform='rotate(-90 150 145)'/><circle cx='150' cy='145' r='44' fill='var(--accent)'/>`;
+  if(m==='coins')return `<rect x='70' y='160' width='40' height='60' rx='6' fill='${c}'/><rect x='130' y='120' width='40' height='100' rx='6' fill='${c}'/><rect x='190' y='80' width='40' height='140' rx='6' fill='var(--accent)'/>`;
+  if(m==='soon')return `<circle cx='150' cy='145' r='70' fill='none' stroke='${c}' stroke-width='8'/><line x1='150' y1='145' x2='150' y2='100' stroke='${c}' stroke-width='8' stroke-linecap='round'/><line x1='150' y1='145' x2='185' y2='160' stroke='var(--accent)' stroke-width='8' stroke-linecap='round'/>`;
+  if(m==='pulse')return `<polyline points='50,145 110,145 135,95 165,200 190,145 250,145' fill='none' stroke='${c}' stroke-width='8' stroke-linejoin='round' stroke-linecap='round'/>`;
+  if(m==='moon')return `<path d='M190 90a70 70 0 1 0 0 110 56 56 0 0 1 0-110z' fill='${c}'/><circle cx='215' cy='110' r='6' fill='var(--accent)'/><circle cx='235' cy='150' r='4' fill='var(--accent)'/>`;
+  return '';
+}
+const list=document.getElementById('projList');
+list.innerHTML=PROJECTS.map(p=>`
+  <a class="proj reveal" href="work/Case Study Light.html?id=${p.slug}" data-card>
+    <div class="proj-inner">
+      <div class="meta">
+        <div class="num">${p.n} / 06</div>
+        <h3>${p.name}</h3>
+        <div class="desc">${p.desc}</div>
+        <div class="tags">${p.tags.map(t=>`<span>${t}</span>`).join('')}</div>
+      </div>
+      <div class="cover" style="background:linear-gradient(150deg,${p.tint},${p.tint2})">
+        <div class="art"><img src="assets/work/${p.slug}.webp" alt="${p.name}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"/></div>
+        <div class="badge">${p.badge}</div>
+      </div>
+      <div class="go">Open case study <span class="circle">↗</span></div>
+    </div>
+  </a>`).join('');
+document.documentElement.classList.add('loaded');
+
+/* reveals */
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+/* reveal anything already in view on first paint so a hash-landing (e.g. #work) never flashes empty */
+requestAnimationFrame(()=>{document.querySelectorAll('.reveal').forEach(el=>{if(el.getBoundingClientRect().top<innerHeight*0.95)el.classList.add('in')})});
+/* enable smooth scrolling only AFTER load + scroll-restoration/hash-jump have settled,
+   so returning to #work lands instantly instead of animating a long jittery scroll */
+if(!matchMedia('(prefers-reduced-motion:reduce)').matches){
+  addEventListener('load',()=>requestAnimationFrame(()=>requestAnimationFrame(()=>document.documentElement.classList.add('smooth'))));
+}
+
+/* cursor */
+const cur=document.getElementById('cursor'),ring=document.getElementById('ring'),lbl=document.getElementById('curLbl');
+let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.16;ry+=(my-ry)*.16;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+function bind(){
+  document.querySelectorAll('[data-card]').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cur.classList.add('lg');cur.classList.remove('sm');lbl.textContent='View';ring.classList.add('hide')});
+    el.addEventListener('mouseleave',()=>{cur.classList.remove('lg');ring.classList.remove('hide')});
+  });
+  document.querySelectorAll('a:not([data-card]),[data-cursor],button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cur.classList.add('sm')});
+    el.addEventListener('mouseleave',()=>{cur.classList.remove('sm')});
+  });
+}
+bind();
+addEventListener('mousedown',()=>ring.style.opacity='.15');
+addEventListener('mouseup',()=>ring.style.opacity='');
+</script>
+<script>addEventListener('load',function(){document.documentElement.classList.add('loaded')})</script>
+</body>
+</html>
