@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Case Study — Sharukh Khan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  /* Light mode, background matched to hansonwu.com warm off-white */
+  --paper:#F6F6F7; --paper-2:#FCFCFD;
+  --ink:#1B1714; --ink-soft:#6A6157;
+  --line:#E4E3E7;
+  --accent:#6C40E6; --accent-ink:#5a32d6;
+  --t1:#D98A6A; --t2:#9CAE8E; --t3:#E6C66E; --t4:#E2A9A0; --t5:#B6A6E0; --t6:#9CB7C7;
+  --serif:"Instrument Serif",Georgia,serif;
+  --sans:"Schibsted Grotesk",system-ui,sans-serif;
+  --mono:"Space Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+html.smooth{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background .45s ease,color .45s ease}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+::selection{background:var(--accent);color:#fff}
+
+/* cursor */
+.cursor{position:fixed;top:0;left:0;width:14px;height:14px;border-radius:50%;background:var(--accent);
+  pointer-events:none;z-index:9999;transform:translate(-50%,-50%);
+  transition:width .25s cubic-bezier(.2,.8,.2,1),height .25s cubic-bezier(.2,.8,.2,1),background .25s,opacity .3s}
+.cursor.sm{width:8px;height:8px}
+.cursor.lg{width:76px;height:76px;background:var(--accent)}
+.cursor .lbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:24px;line-height:1;opacity:0;transform:scale(.5);
+  transition:opacity .2s,transform .25s cubic-bezier(.34,1.56,.64,1)}
+.cursor.lg .lbl{opacity:1;transform:scale(1)}
+.cursor-ring{position:fixed;top:0;left:0;width:34px;height:34px;border:1.5px solid var(--ink);border-radius:50%;
+  pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.5;transition:opacity .3s,width .3s,height .3s}
+.cursor-ring.hide{opacity:0}
+@media (hover:none){.cursor,.cursor-ring{display:none}}
+
+/* zoomable image affordance */
+.zoomable{cursor:zoom-in}
+
+/* lightbox overlay */
+.lightbox{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;padding:clamp(8px,1.5vw,20px)}
+.lightbox.open{display:flex;cursor:zoom-out}
+.lightbox .scrim{position:absolute;inset:0;background:rgba(18,14,10,.62);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  opacity:0;transition:opacity .4s ease}
+.lightbox.shown .scrim{opacity:1}
+.lightbox .stage{position:relative;max-width:99vw;max-height:98vh;display:flex;flex-direction:column;align-items:center;gap:14px;z-index:2;
+  opacity:0;transform:scale(.96);transition:opacity .4s ease,transform .42s cubic-bezier(.22,.8,.22,1)}
+.lightbox.shown .stage{opacity:1;transform:none}
+.lightbox .stage img{display:block;max-width:98vw;max-height:94vh;width:auto;height:auto;border-radius:14px;cursor:zoom-out;
+  box-shadow:0 40px 120px -30px rgba(0,0,0,.7);background:var(--paper-2)}
+.lightbox .stage:has(figcaption:not([style*="none"])) img{max-height:88vh}
+.lightbox figcaption{font-family:var(--mono);font-size:12.5px;color:rgba(255,255,255,.78);letter-spacing:.02em;
+  text-align:center;max-width:62ch;line-height:1.5;opacity:0;transition:opacity .35s ease .1s}
+.lightbox.shown figcaption{opacity:1}
+.lightbox .lb-close{position:fixed;top:24px;right:26px;width:44px;height:44px;border-radius:50%;z-index:3;
+  border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;font-size:20px;line-height:1;
+  display:grid;place-items:center;cursor:pointer;opacity:0;transition:opacity .35s ease,background .25s,transform .25s}
+.lightbox.shown .lb-close{opacity:1}
+.lightbox .lb-close:hover{background:rgba(255,255,255,.18);transform:rotate(90deg)}
+/* rotate-to-fullscreen hint — touch devices, portrait only */
+.lightbox .lb-rotate{position:fixed;left:50%;bottom:max(22px,env(safe-area-inset-bottom));
+  transform:translateX(-50%) translateY(8px);display:none;align-items:center;gap:8px;z-index:3;
+  font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:rgba(255,255,255,.74);
+  white-space:nowrap;pointer-events:none;opacity:0;
+  transition:opacity .45s ease .35s,transform .45s ease .35s}
+.lightbox .lb-rotate .ic{font-size:15px;display:inline-block;animation:rotHint 2.6s ease-in-out infinite}
+@keyframes rotHint{0%,62%{transform:rotate(0)}80%,100%{transform:rotate(-90deg)}}
+.lightbox.shown .lb-rotate{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (orientation:portrait) and (max-width:760px){.lightbox .lb-rotate{display:flex}}
+/* landscape on a phone (short viewport): maximise image edge-to-edge, drop caption + hint */
+@media (orientation:landscape) and (max-height:600px){
+  .lightbox{padding:0}
+  .lightbox .stage{max-width:100vw;max-height:100vh;gap:0}
+  .lightbox .stage img{max-width:100vw;max-height:100vh;border-radius:0}
+  .lightbox .stage:has(figcaption:not([style*="none"])) img{max-height:100vh}
+  .lightbox figcaption{display:none}
+}
+/* the flying clone during FLIP */
+.flip-clone{position:fixed;z-index:10001;border-radius:14px;will-change:transform;pointer-events:none;
+  box-shadow:0 40px 120px -30px rgba(0,0,0,.0);transition:transform .46s cubic-bezier(.22,.8,.22,1),box-shadow .46s,border-radius .46s;
+  background-size:cover;background-position:center}
+@media (hover:none){.zoomable{cursor:default}}
+
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:120;display:flex;align-items:center;justify-content:space-between;
+  padding:18px clamp(20px,4vw,56px);background:color-mix(in oklab,var(--paper) 78%,transparent);
+  backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .4s,background .4s}
+nav.scrolled{border-bottom-color:var(--line)}
+nav .brand{font-family:var(--serif);font-size:23px;letter-spacing:.01em;white-space:nowrap}
+nav .brand b{font-weight:400}
+nav .links{display:flex;gap:26px;align-items:center;font-size:15px}
+nav .links a{position:relative;padding:4px 0}
+nav .links a .u{position:absolute;left:0;bottom:0;height:1.5px;width:100%;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+nav .links a:hover .u{transform:scaleX(1)}
+.avail{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;color:var(--ink-soft)}
+.avail .dot{width:8px;height:8px;border-radius:50%;background:#3FbF7F;position:relative}
+.avail .dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:#3FbF7F;animation:ping 2s ease-out infinite}
+@keyframes ping{0%{transform:scale(1);opacity:.7}100%{transform:scale(2.6);opacity:0}}
+.theme-toggle{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);
+  cursor:pointer;display:grid;place-items:center;position:relative;transition:background .3s,transform .3s,border-color .3s;font-size:15px;line-height:1;flex-shrink:0}
+.theme-toggle:hover{transform:translateY(-2px) rotate(10deg);border-color:var(--accent)}
+.theme-toggle .ico{position:absolute;transition:opacity .35s,transform .45s cubic-bezier(.34,1.56,.64,1)}
+.theme-toggle .moon{opacity:0;transform:scale(.3) rotate(-50deg)}
+html[data-theme="dark"] .theme-toggle .sun{opacity:0;transform:scale(.3) rotate(50deg)}
+html[data-theme="dark"] .theme-toggle .moon{opacity:1;transform:none}
+.back{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:12px;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--ink-soft)}
+.back .arr{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);
+  transition:transform .4s cubic-bezier(.2,.8,.2,1),background .3s,color .3s}
+.back:hover .arr{transform:translateX(-4px);background:var(--ink);color:var(--paper)}
+
+/* hero */
+.cs-hero{padding:140px clamp(20px,4vw,56px) 0;max-width:1200px;margin:0 auto}
+.cs-eyebrow{display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:12.5px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--ink-soft);margin-bottom:26px}
+.cs-eyebrow .num{color:var(--accent-ink)}
+.cs-eyebrow .ln{height:1px;width:46px;background:var(--line)}
+.cs-title{font-family:var(--serif);font-weight:400;font-size:clamp(48px,8vw,118px);line-height:1.0;letter-spacing:-.015em}
+.cs-tagline{margin-top:26px;font-size:clamp(19px,2.1vw,26px);color:var(--ink-soft);max-width:30ch;line-height:1.4}
+.cs-tagline .it{font-family:var(--serif);font-style:italic;color:var(--accent);font-size:1.12em}
+.cs-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:clamp(40px,5vw,64px);
+  padding-top:30px;border-top:1px solid var(--line)}
+.cs-meta .cell .k{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:7px}
+.cs-meta .cell .v{font-size:15.5px;line-height:1.35}
+
+/* hero image */
+.cs-cover{margin:clamp(40px,5vw,70px) auto 0;max-width:1200px;padding:0 clamp(20px,4vw,56px)}
+.cs-cover .frame{border-radius:22px;overflow:hidden;position:relative}
+.cs-cover.gradient .frame{aspect-ratio:16/9;display:grid;place-items:center}
+.cs-cover .frame img{width:100%;height:auto}
+.cs-cover .glyph{font-family:var(--serif);font-style:italic;font-size:clamp(40px,7vw,96px);color:rgba(255,255,255,.92)}
+.coming{display:inline-flex;align-items:center;gap:9px;margin-top:16px;font-family:var(--mono);font-size:12px;
+  letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft)}
+.coming .dot{width:8px;height:8px;border-radius:50%;background:var(--t3)}
+
+/* body */
+.cs-body{max-width:840px;margin:0 auto;padding:clamp(50px,7vw,100px) clamp(20px,4vw,56px) 0}
+.blk{margin-bottom:clamp(40px,5vw,72px)}
+.blk.lead p{font-family:var(--serif);font-size:clamp(24px,3vw,34px);line-height:1.34;letter-spacing:-.01em;color:var(--ink)}
+.blk h2{font-family:var(--serif);font-size:clamp(26px,3.4vw,40px);font-weight:400;letter-spacing:-.01em;margin-bottom:20px}
+.blk h2 .mk{display:inline-block;width:26px;height:2px;background:var(--accent);vertical-align:middle;margin-right:14px;transform:translateY(-7px)}
+.blk p{font-size:18px;line-height:1.62;color:var(--ink-soft);margin-bottom:16px;text-wrap:pretty}
+.blk p:last-child{margin-bottom:0}
+.blk p strong{color:var(--ink);font-weight:600}
+.blk p em{font-style:italic}
+
+/* figures (full bleed-ish) */
+.fig{max-width:1200px;margin:0 auto clamp(40px,5vw,72px);padding:0 clamp(20px,4vw,56px)}
+.fig.sm .frame{max-width:620px;margin-left:auto;margin-right:auto}
+.fig .frame{border-radius:18px;overflow:hidden;background:var(--paper-2);border:1px solid var(--line)}
+.fig img{width:100%}
+.frame.imgfail{aspect-ratio:16/10;display:grid;place-items:center;background:linear-gradient(150deg,var(--paper-2),var(--line))}
+.frame.imgfail::after{content:"✺";font-family:var(--serif);font-style:italic;font-size:34px;color:var(--ink-soft);opacity:.5}
+.frame.imgfail img{display:none}
+.fig figcaption,.duo figcaption{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin-top:14px;letter-spacing:.02em;line-height:1.5}
+.duo{max-width:1200px;margin:0 auto clamp(40px,5vw,72px);padding:0 clamp(20px,4vw,56px);
+  display:grid;grid-template-columns:1fr;gap:clamp(24px,3vw,40px)}
+.duo .frame{border-radius:18px;overflow:hidden;background:var(--paper-2);border:1px solid var(--line)}
+.duo figure img{width:100%}
+
+/* quote */
+.quote{max-width:900px;margin:0 auto clamp(40px,5vw,72px);padding:0 clamp(20px,4vw,56px);text-align:center}
+.quote blockquote{font-family:var(--serif);font-style:italic;font-size:clamp(26px,3.6vw,44px);line-height:1.28;letter-spacing:-.01em}
+.quote blockquote::before{content:"\201C";color:var(--accent)}
+.quote blockquote::after{content:"\201D";color:var(--accent)}
+.quote .by{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-top:20px}
+
+/* metrics */
+.metrics{max-width:1200px;margin:clamp(20px,3vw,40px) auto clamp(40px,5vw,72px);padding:clamp(36px,4vw,56px) clamp(20px,4vw,56px);
+  display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,3vw,44px);
+  background:var(--paper-2);border-radius:22px;border:1px solid var(--line)}
+.metrics .m .big{font-family:var(--serif);font-size:clamp(44px,6vw,76px);line-height:1;letter-spacing:-.02em;color:var(--accent-ink)}
+.metrics .m .label{margin-top:14px;font-size:15px;color:var(--ink-soft);line-height:1.45}
+
+/* note */
+.note{max-width:840px;margin:0 auto clamp(40px,5vw,72px);padding:0 clamp(20px,4vw,56px)}
+.note .inner{border:1px dashed var(--line);border-radius:16px;padding:24px 28px;font-family:var(--mono);font-size:13.5px;
+  letter-spacing:.02em;color:var(--ink-soft);line-height:1.6;display:flex;gap:14px;align-items:flex-start}
+.note .inner .star{color:var(--accent)}
+
+/* prev/next */
+.pn{max-width:1200px;margin:clamp(50px,7vw,100px) auto 0;padding:0 clamp(20px,4vw,56px);
+  border-top:1px solid var(--line)}
+.pn-grid{display:grid;grid-template-columns:1fr 1fr}
+.pn a{padding:clamp(34px,4vw,56px) 0;display:block;position:relative}
+.pn a.next{text-align:right;border-left:1px solid var(--line);padding-left:clamp(24px,3vw,48px)}
+.pn a.prev{padding-right:clamp(24px,3vw,48px)}
+.pn .lab{font-family:var(--mono);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-soft)}
+.pn .nm{font-family:var(--serif);font-size:clamp(24px,3vw,40px);font-weight:400;margin-top:12px;line-height:1.08;
+  transition:color .3s}
+.pn a:hover .nm{color:var(--accent)}
+.pn a.disabled{opacity:.32;pointer-events:none}
+
+/* footer hidden until JS injects the case content, so it never flashes at the top during the case-data.js fetch */
+footer{visibility:hidden}
+html.loaded footer{visibility:visible}
+/* footer */
+footer{padding:60px clamp(20px,4vw,56px) 40px;border-top:1px solid var(--line);margin-top:clamp(50px,6vw,90px);
+  display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px}
+footer .big{font-family:var(--serif);font-size:clamp(30px,5vw,60px);line-height:.98;font-weight:400}
+footer .big .it{font-style:italic;color:var(--accent)}
+footer .col{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);line-height:2}
+footer .col a:hover{color:var(--accent)}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+@media (max-width:760px){
+  .cs-meta{grid-template-columns:1fr 1fr;gap:20px}
+  .duo{grid-template-columns:1fr}
+  .metrics{grid-template-columns:1fr;text-align:center}
+  .pn-grid{grid-template-columns:1fr}
+  .pn a.next{border-left:0;border-top:1px solid var(--line);padding-left:0;text-align:left}
+  nav .links{gap:16px}
+  nav .links .hide-sm{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}.reveal{opacity:1;transform:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"><span class="lbl" id="curLbl">⌕</span></div>
+<div class="cursor-ring" id="ring"></div>
+
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <div class="scrim" data-lb-close></div>
+  <button class="lb-close" id="lbClose" aria-label="Close" data-lb-close>✕</button>
+  <figure class="stage">
+    <img id="lbImg" alt="" />
+    <figcaption id="lbCap"></figcaption>
+  </figure>
+  <div class="lb-rotate"><span class="ic">↻</span> Rotate for fullscreen</div>
+</div>
+
+<nav id="nav">
+  <a class="back" href="../index.html#work" data-cursor><span class="arr">←</span> All Projects</a>
+  <div class="links">
+    <a href="../index.html#work">Work<span class="u"></span></a>
+    <a href="../index.html#about">About<span class="u"></span></a>
+    <a href="https://www.linkedin.com/in/sharukh-khan-7085bab7/" target="_blank" rel="noopener">LinkedIn<span class="u"></span></a>
+  </div>
+</nav>
+
+<main id="cs"></main>
+
+<footer>
+  <div class="big">Let's make<br>something <span class="it">wonderful.</span></div>
+  <div class="col">
+    <a href="https://www.linkedin.com/in/sharukh-khan-7085bab7/" target="_blank" rel="noopener">LinkedIn ↗</a><br>
+    <a href="../index.html#work">Work</a><br>
+    <a href="../index.html#about">About</a><br>
+    <span style="opacity:.6">© 2026 Sharukh Khan</span>
+  </div>
+</footer>
+
+<script src="case-data.js"></script>
+<script>
+/* ---------- resolve which case ---------- */
+const params=new URLSearchParams(location.search);
+let id=params.get('id');
+if(!id||!CASES[id])id='servicetitan';
+const C=CASES[id];
+document.title=C.title+" — Sharukh Khan";
+
+/* ---------- render hero ---------- */
+const esc=s=>s;
+let html='';
+html+=`<section class="cs-hero">
+  <div class="cs-eyebrow reveal"><span class="num">${C.n}</span><span class="ln"></span>${C.badge}</div>
+  <h1 class="cs-title reveal">${C.title}</h1>
+  <p class="cs-tagline reveal">${C.tagline}</p>
+  <div class="cs-meta reveal">
+    ${C.meta.map(m=>`<div class="cell"><div class="k">${m.k}</div><div class="v">${m.v}</div></div>`).join('')}
+  </div>
+</section>`;
+
+/* hero cover: real image, or gradient with initial */
+if(C.hero){
+  html+=`<div class="cs-cover reveal"><div class="frame"><img src="${C.hero}" alt="${C.title}" loading="eager" onerror="this.closest('.frame').classList.add('imgfail')"/></div>${C.comingSoon?'<div class="coming"><span class="dot"></span>Full case study coming soon</div>':''}</div>`;
+}else{
+  const initial=C.title.trim()[0];
+  html+=`<div class="cs-cover gradient reveal"><div class="frame" style="background:linear-gradient(150deg,${C.tint},${C.tint2})"><span class="glyph">${initial}</span></div>${C.comingSoon?'<div class="coming"><span class="dot"></span>Full case study coming soon</div>':''}</div>`;
+}
+
+/* ---------- render body sections ---------- */
+html+=`<div class="cs-body">`;
+let bodyOpen=true;
+function closeBody(){if(bodyOpen){html+=`</div>`;bodyOpen=false}}
+function openBody(){if(!bodyOpen){html+=`<div class="cs-body">`;bodyOpen=true}}
+
+C.sections.forEach(s=>{
+  if(s.k==='lead'){
+    openBody();
+    html+=`<div class="blk lead reveal"><p>${s.t}</p></div>`;
+  }else if(s.k==='text'){
+    openBody();
+    html+=`<div class="blk reveal"><h2><span class="mk"></span>${s.h}</h2>${s.p.map(p=>`<p>${p}</p>`).join('')}</div>`;
+  }else if(s.k==='note'){
+    openBody();
+    html+=`<div class="blk reveal" style="margin-bottom:0"></div></div>`;bodyOpen=false;
+    html+=`<div class="note reveal"><div class="inner"><span class="star">✺</span><span>${s.t}</span></div></div><div class="cs-body">`;bodyOpen=true;
+  }else if(s.k==='fig'){
+    closeBody();
+    html+=`<figure class="fig reveal${s.size?' '+s.size:''}"><div class="frame"><img src="${s.img}" alt="" loading="lazy" onerror="this.closest('.frame').classList.add('imgfail')"/></div>${s.cap?`<figcaption>${s.cap}</figcaption>`:''}</figure>`;
+    openBody();
+  }else if(s.k==='duo'){
+    closeBody();
+    html+=`<div class="duo reveal">${s.items.map(it=>`<figure><div class="frame"><img src="${it.img}" alt="" loading="lazy" onerror="this.closest('.frame').classList.add('imgfail')"/></div>${it.cap?`<figcaption>${it.cap}</figcaption>`:''}</figure>`).join('')}</div>`;
+    openBody();
+  }else if(s.k==='quote'){
+    closeBody();
+    html+=`<div class="quote reveal"><blockquote>${s.t}</blockquote>${s.by?`<div class="by">${s.by}</div>`:''}</div>`;
+    openBody();
+  }else if(s.k==='metrics'){
+    closeBody();
+    html+=`<div class="metrics reveal">${s.items.map(m=>`<div class="m"><div class="big">${m.big}</div><div class="label">${m.label}</div></div>`).join('')}</div>`;
+    openBody();
+  }
+});
+closeBody();
+
+/* ---------- prev / next ---------- */
+const i=ORDER.indexOf(id);
+const prev=i>0?CASES[ORDER[i-1]]:null;
+const next=i<ORDER.length-1?CASES[ORDER[i+1]]:null;
+html+=`<div class="pn"><div class="pn-grid">
+  <a class="prev ${prev?'':'disabled'}" href="${prev?`?id=${ORDER[i-1]}`:'#'}" data-cursor>
+    <div class="lab">← Previous</div><div class="nm">${prev?prev.name:'—'}</div></a>
+  <a class="next ${next?'':'disabled'}" href="${next?`?id=${ORDER[i+1]}`:'#'}" data-cursor>
+    <div class="lab">Next →</div><div class="nm">${next?next.name:'—'}</div></a>
+</div></div>`;
+
+document.getElementById('cs').innerHTML=html;
+document.documentElement.classList.add('loaded');
+
+/* ---------- reveals ---------- */
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+/* reveal anything already in view on first paint so the hero never flashes empty */
+requestAnimationFrame(()=>{document.querySelectorAll('.reveal').forEach(el=>{if(el.getBoundingClientRect().top<innerHeight*0.95)el.classList.add('in')})});
+/* enable smooth scrolling only AFTER load settles, so entering the page doesn't animate a jittery scroll */
+if(!matchMedia('(prefers-reduced-motion:reduce)').matches){
+  addEventListener('load',()=>requestAnimationFrame(()=>requestAnimationFrame(()=>document.documentElement.classList.add('smooth'))));
+}
+
+/* ---------- nav scrolled state ---------- */
+const navEl=document.getElementById('nav');
+addEventListener('scroll',()=>{navEl.classList.toggle('scrolled',scrollY>20)},{passive:true});
+
+/* ---------- cursor ---------- */
+const cur=document.getElementById('cursor'),ring=document.getElementById('ring');
+let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function loop(){rx+=(mx-rx)*.16;ry+=(my-ry)*.16;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+function bindCursor(){
+  document.querySelectorAll('a,button,[data-cursor]').forEach(el=>{
+    el.addEventListener('mouseenter',()=>cur.classList.add('sm'));
+    el.addEventListener('mouseleave',()=>cur.classList.remove('sm'));
+  });
+}
+bindCursor();
+addEventListener('mousedown',()=>{if(!lbOpen)ring.style.opacity='.15'});
+addEventListener('mouseup',()=>{if(!lbOpen)ring.style.opacity=''});
+
+/* ---------- image zoom (cursor affordance + FLIP lightbox) ---------- */
+const lb=document.getElementById('lightbox'),lbImg=document.getElementById('lbImg'),lbCap=document.getElementById('lbCap');
+let lbOpen=false;
+
+function bindZoom(){
+  document.querySelectorAll('.fig .frame img, .duo .frame img').forEach(img=>{
+    if(img.dataset.zoomBound)return; img.dataset.zoomBound='1';
+    const frame=img.closest('.frame');
+    if(frame)frame.classList.add('zoomable');
+    img.addEventListener('mouseenter',()=>{
+      if(frame&&frame.classList.contains('imgfail'))return;
+      if(!img.naturalWidth)return;
+      cur.classList.add('lg');cur.classList.remove('sm');ring.classList.add('hide');
+    });
+    img.addEventListener('mouseleave',()=>{cur.classList.remove('lg');ring.classList.remove('hide')});
+    (frame||img).addEventListener('click',()=>openLightbox(img));
+  });
+}
+
+function lockScroll(){
+  const sw=innerWidth-document.documentElement.clientWidth;
+  document.documentElement.style.overflow='hidden';
+  if(sw>0)document.body.style.paddingRight=sw+'px';
+}
+function unlockScroll(){
+  document.documentElement.style.overflow='';
+  document.body.style.paddingRight='';
+}
+
+function openLightbox(img){
+  if(lbOpen)return;
+  const frame=img.closest('.frame');
+  if(frame&&frame.classList.contains('imgfail'))return;
+  if(!img.naturalWidth)return;
+  lbOpen=true;
+  cur.classList.remove('lg');ring.classList.remove('hide');
+  const src=img.currentSrc||img.src;
+  const fig=img.closest('figure');
+  const capEl=fig?fig.querySelector('figcaption'):null;
+  const capText=capEl?capEl.textContent.trim():'';
+  lbImg.alt=img.alt||'';
+  lbCap.textContent=capText; lbCap.style.display=capText?'':'none';
+
+  const first=img.getBoundingClientRect();
+  const radius=getComputedStyle(frame||img).borderRadius;
+  lockScroll();
+  lb.classList.add('open');
+  lb.setAttribute('aria-hidden','false');
+  lbImg.style.visibility='hidden';
+  lbImg.src=src;
+
+  const run=()=>{
+    lb.classList.add('shown');               // stage transform -> none, so target rect is accurate
+    const last=lbImg.getBoundingClientRect();
+    const clone=document.createElement('div');
+    clone.className='flip-clone';
+    clone.style.backgroundImage=`url("${src}")`;
+    clone.style.left=first.left+'px';
+    clone.style.top=first.top+'px';
+    clone.style.width=first.width+'px';
+    clone.style.height=first.height+'px';
+    clone.style.borderRadius=radius;
+    clone.style.transformOrigin='top left';
+    document.body.appendChild(clone);
+    const dx=last.left-first.left, dy=last.top-first.top;
+    const sx=last.width/first.width, sy=last.height/first.height;
+    requestAnimationFrame(()=>{
+      clone.style.transform=`translate(${dx}px,${dy}px) scale(${sx},${sy})`;
+      clone.style.boxShadow='0 40px 120px -30px rgba(0,0,0,.7)';
+      clone.style.borderRadius=(14/Math.max(sx,sy))+'px';
+    });
+    const done=e=>{
+      if(e&&e.propertyName&&e.propertyName!=='transform')return;
+      clone.removeEventListener('transitionend',done);
+      lbImg.style.visibility='';
+      clone.remove();
+    };
+    clone.addEventListener('transitionend',done);
+    setTimeout(done,560); // safety
+  };
+  if(lbImg.complete&&lbImg.naturalWidth)run();
+  else lbImg.onload=()=>{lbImg.onload=null;run()};
+}
+
+function closeLightbox(){
+  if(!lbOpen)return;
+  lbOpen=false;
+  lb.classList.remove('shown');
+  setTimeout(()=>{
+    lb.classList.remove('open');
+    lb.setAttribute('aria-hidden','true');
+    lbImg.removeAttribute('src');
+    lbImg.style.visibility='';
+    unlockScroll();
+  },420);
+}
+
+lb.addEventListener('click',()=>{if(lbOpen)closeLightbox()});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&lbOpen)closeLightbox()});
+bindZoom();
+
+/* prev/next links carry ?id= on this same (light) file, so the theme stays light */
+</script>
+<script>addEventListener('load',function(){document.documentElement.classList.add('loaded')})</script>
+</body>
+</html>
