@@ -113,6 +113,10 @@ const CASES = {
       { k: "text", h: "Information architecture", p: [
         "The deeper question was IA. Should all data live on a single scrolling page, or be compartmentalized so users get a high-level summary first?",
         "<strong>Single scroll</strong> meant mobile-native scrolling and fewer taps, but risked overload on small screens and blurred the line between input and insight. <strong>A two-screen flow</strong> led with a lightweight summary, kept a clear Track-vs-Learn distinction, and reduced cognitive load — at the cost of one extra tap. I A/B tested both." ] },
+      { k: "duo-vid", items: [
+        { label: "Single Scroll", src: "../assets/eczema-single-scroll.mov", cap: "Prototype excerpt" },
+        { label: "Two-Screen Flow", src: "../assets/eczema-two-screen.mov", cap: "Prototype excerpt" },
+      ]},
       { k: "quote", t: "Track is where I put things in. Learn is where I see what it means.", by: "Usability test participant" },
       { k: "text", h: "Testing & insights", p: [
         "A/B testing revealed a clear trade-off. Single scroll felt familiar but caused confusion — asked to update a tracker after reviewing Learn, users often tried to edit directly inside Learn. The two-screen flow matched expectations, and the lighter summary-first view felt faster and less overwhelming.",
