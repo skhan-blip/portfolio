@@ -58,6 +58,9 @@ img{display:block;max-width:100%}
 .lightbox .stage img{display:block;max-width:98vw;max-height:94vh;width:auto;height:auto;border-radius:14px;cursor:zoom-out;
   box-shadow:0 40px 120px -30px rgba(0,0,0,.7);background:var(--paper-2)}
 .lightbox .stage:has(figcaption:not([style*="none"])) img{max-height:88vh}
+#lbVid{display:none;max-width:98vw;max-height:94vh;width:auto;height:auto;border-radius:14px;cursor:zoom-out;
+  box-shadow:0 40px 120px -30px rgba(0,0,0,.7)}
+.lightbox .stage:has(figcaption:not([style*="none"])) #lbVid{max-height:88vh}
 .lightbox figcaption{font-family:var(--mono);font-size:12.5px;color:rgba(255,255,255,.78);letter-spacing:.02em;
   text-align:center;max-width:62ch;line-height:1.5;opacity:0;transition:opacity .35s ease .1s}
 .lightbox.shown figcaption{opacity:1}
@@ -82,6 +85,7 @@ img{display:block;max-width:100%}
   .lightbox .stage{max-width:100vw;max-height:100vh;gap:0}
   .lightbox .stage img{max-width:100vw;max-height:100vh;border-radius:0}
   .lightbox .stage:has(figcaption:not([style*="none"])) img{max-height:100vh}
+  #lbVid{max-width:100vw;max-height:100vh;border-radius:0}
   .lightbox figcaption{display:none}
 }
 /* the flying clone during FLIP */
@@ -166,13 +170,9 @@ html[data-theme="dark"] .theme-toggle .moon{opacity:1;transform:none}
   display:grid;grid-template-columns:1fr;gap:clamp(24px,3vw,40px)}
 .duo .frame{border-radius:18px;overflow:hidden;background:var(--paper-2);border:1px solid var(--line)}
 .duo figure img{width:100%}
-.duo-vid{max-width:1200px;margin:0 auto clamp(40px,5vw,72px);padding:0 clamp(20px,4vw,56px);
-  display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,3vw,40px)}
-.duo-vid .vid-label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+.duo .vid-label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
   color:var(--ink-soft);margin-bottom:10px}
-.duo-vid .frame{border-radius:18px;overflow:hidden;background:var(--paper-2);border:1px solid var(--line)}
-.duo-vid .frame video{width:100%;display:block}
-.duo-vid figcaption{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin-top:14px;letter-spacing:.02em;line-height:1.5}
+.duo figure video{width:100%;display:block}
 
 /* quote */
 .quote{max-width:900px;margin:0 auto clamp(40px,5vw,72px);padding:0 clamp(20px,4vw,56px);text-align:center}
@@ -225,7 +225,6 @@ footer .col a:hover{color:var(--accent)}
 @media (max-width:760px){
   .cs-meta{grid-template-columns:1fr 1fr;gap:20px}
   .duo{grid-template-columns:1fr}
-  .duo-vid{grid-template-columns:1fr}
   .metrics{grid-template-columns:1fr;text-align:center}
   .pn-grid{grid-template-columns:1fr}
   .pn a.next{border-left:0;border-top:1px solid var(--line);padding-left:0;text-align:left}
@@ -244,6 +243,7 @@ footer .col a:hover{color:var(--accent)}
   <button class="lb-close" id="lbClose" aria-label="Close" data-lb-close>✕</button>
   <figure class="stage">
     <img id="lbImg" alt="" />
+    <video id="lbVid" autoplay loop muted playsinline></video>
     <figcaption id="lbCap"></figcaption>
   </figure>
   <div class="lb-rotate"><span class="ic">↻</span> Rotate for fullscreen</div>
@@ -326,7 +326,7 @@ C.sections.forEach(s=>{
     openBody();
   }else if(s.k==='duo-vid'){
     closeBody();
-    html+=`<div class="duo-vid reveal">${s.items.map(it=>`<div><div class="vid-label">${it.label}</div><div class="frame"><video src="${it.src}" autoplay loop muted playsinline></video></div>${it.cap?`<figcaption>${it.cap}</figcaption>`:''}</div>`).join('')}</div>`;
+    html+=`<div class="duo reveal">${s.items.map(it=>`<figure><div class="vid-label">${it.label}</div><div class="frame"><video src="${it.src}" autoplay loop muted playsinline></video></div>${it.cap?`<figcaption>${it.cap}</figcaption>`:''}</figure>`).join('')}</div>`;
     openBody();
   }else if(s.k==='quote'){
     closeBody();
@@ -388,7 +388,7 @@ addEventListener('mousedown',()=>{if(!lbOpen)ring.style.opacity='.15'});
 addEventListener('mouseup',()=>{if(!lbOpen)ring.style.opacity=''});
 
 /* ---------- image zoom (cursor affordance + FLIP lightbox) ---------- */
-const lb=document.getElementById('lightbox'),lbImg=document.getElementById('lbImg'),lbCap=document.getElementById('lbCap');
+const lb=document.getElementById('lightbox'),lbImg=document.getElementById('lbImg'),lbCap=document.getElementById('lbCap'),lbVid=document.getElementById('lbVid');
 let lbOpen=false;
 
 function bindZoom(){
@@ -404,6 +404,32 @@ function bindZoom(){
     img.addEventListener('mouseleave',()=>{cur.classList.remove('lg');ring.classList.remove('hide')});
     (frame||img).addEventListener('click',()=>openLightbox(img));
   });
+  document.querySelectorAll('.fig .frame video, .duo .frame video').forEach(vid=>{
+    if(vid.dataset.zoomBound)return; vid.dataset.zoomBound='1';
+    const frame=vid.closest('.frame');
+    if(frame)frame.classList.add('zoomable');
+    vid.addEventListener('mouseenter',()=>{cur.classList.add('lg');cur.classList.remove('sm');ring.classList.add('hide')});
+    vid.addEventListener('mouseleave',()=>{cur.classList.remove('lg');ring.classList.remove('hide')});
+    (frame||vid).addEventListener('click',()=>openLightboxVideo(vid));
+  });
+}
+
+function openLightboxVideo(vid){
+  if(lbOpen)return;
+  lbOpen=true;
+  cur.classList.remove('lg');ring.classList.remove('hide');
+  const fig=vid.closest('figure');
+  const capEl=fig?fig.querySelector('figcaption'):null;
+  const capText=capEl?capEl.textContent.trim():'';
+  lbCap.textContent=capText;lbCap.style.display=capText?'':'none';
+  lbImg.style.display='none';
+  lbVid.src=vid.currentSrc||vid.src;
+  lbVid.style.display='block';
+  lockScroll();
+  lb.classList.add('open');
+  lb.setAttribute('aria-hidden','false');
+  requestAnimationFrame(()=>lb.classList.add('shown'));
+  lbVid.play().catch(()=>{});
 }
 
 function lockScroll(){
@@ -479,7 +505,11 @@ function closeLightbox(){
     lb.classList.remove('open');
     lb.setAttribute('aria-hidden','true');
     lbImg.removeAttribute('src');
+    lbImg.style.display='';
     lbImg.style.visibility='';
+    lbVid.pause();
+    lbVid.removeAttribute('src');
+    lbVid.style.display='none';
     unlockScroll();
   },420);
 }
