@@ -15,7 +15,7 @@ const CASES = {
     n: "01",
     name: "Inventory by ServiceTitan",
     title: "Inventory by ServiceTitan",
-    tagline: "A barcode-scanning mobile app that cut item-counting time by 54% — the company's first native app on the App Store.",
+    tagline: "A barcode-scanning mobile app that cut item-counting time by 54% — the company's first native app on the App Store and Google Play.",
     badge: "SaaS · iOS & Android",
     tint: "var(--t1)", tint2: "#c2613f",
     meta: [
