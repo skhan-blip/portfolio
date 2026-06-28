@@ -79,7 +79,7 @@ const CASES = {
     n: "02",
     name: "EczemaWise",
     title: "EczemaWise",
-    tagline: "A symptom-tracking companion for the National Eczema Association, helping patients understand their skin over time. 18,000 new users joined after launch.",
+    tagline: "A symptom-tracking companion that brought 18,000 new users to the National Eczema Association.",
     badge: "Healthcare · Award-winning",
     tint: "var(--t2)", tint2: "#728a5f",
     meta: [
