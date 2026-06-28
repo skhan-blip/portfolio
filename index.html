@@ -49,7 +49,7 @@ a{color:inherit;text-decoration:none}
 .cursor.lg{width:84px;height:84px;background:var(--accent);}
 .cursor.sm{width:8px;height:8px;}
 .cursor .lbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  color:#fff;font-family:var(--mono);font-size:11px;letter-spacing:.04em;opacity:0;transition:opacity .2s;text-transform:uppercase}
+  color:#fff;font-family:var(--mono);font-size:14px;letter-spacing:.04em;opacity:0;transition:opacity .2s;text-transform:uppercase}
 .cursor.lg .lbl{opacity:1}
 .cursor-ring{position:fixed;top:0;left:0;width:34px;height:34px;border:1.5px solid var(--ink);
   border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.5;
@@ -78,7 +78,7 @@ html[data-theme="dark"] .theme-toggle .moon{opacity:1;transform:none}
 /* ---------- hero ---------- */
 .hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;
   padding:120px clamp(20px,4vw,56px) 104px;position:relative}
-.hero .kicker{font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);
+.hero .kicker{font-family:var(--mono);font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);
   display:flex;align-items:center;gap:14px;margin-bottom:30px}
 .hero .kicker .ln{height:1px;width:54px;background:var(--line)}
 .h1{font-family:var(--serif);font-weight:400;font-size:clamp(34px,9vw,129px);line-height:1.04;letter-spacing:-.01em;max-width:none}
@@ -92,7 +92,7 @@ html[data-theme="dark"] .theme-toggle .moon{opacity:1;transform:none}
 .hero .sub{margin-top:clamp(40px,4.5vw,64px);display:flex;flex-wrap:wrap;gap:18px 34px;align-items:flex-end;max-width:760px}
 .hero .sub p{font-size:18px;color:var(--ink-soft);max-width:46ch;line-height:1.55}
 .hero .scroll{position:absolute;left:clamp(20px,4vw,56px);bottom:34px;display:flex;align-items:center;gap:12px;
-  font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+  font-family:var(--mono);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
 .hero .scroll .arr{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;animation:bob 1.8s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
 
@@ -108,7 +108,7 @@ html[data-theme="dark"] .theme-toggle .moon{opacity:1;transform:none}
 .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;
   padding:0 clamp(20px,4vw,56px);margin:30px 0 38px}
 .sec-head h2{font-family:var(--serif);font-size:clamp(26px,3vw,40px);font-weight:400}
-.sec-head .idx{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.sec-head .idx{font-family:var(--mono);font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
 
 /* ---------- work ---------- */
 .work{padding:40px 0 30px}
@@ -125,14 +125,14 @@ html[data-theme="dark"] .theme-toggle .moon{opacity:1;transform:none}
 .cover{position:relative;aspect-ratio:4/3;border-radius:18px;overflow:hidden;will-change:transform;align-self:center}
 .cover .art{position:absolute;inset:0;transition:transform .9s cubic-bezier(.2,.8,.2,1)}
 .proj:hover .cover .art{transform:scale(1.05)}
-.cover .badge{position:absolute;top:14px;left:14px;z-index:3;font-family:var(--mono);font-size:11px;color:#1B1714;
+.cover .badge{position:absolute;top:14px;left:14px;z-index:3;font-family:var(--mono);font-size:14px;color:#1B1714;
   background:rgba(255,255,255,.85);backdrop-filter:blur(4px);padding:5px 10px;border-radius:20px;letter-spacing:.03em}
 .cover .device{position:absolute;z-index:2;border-radius:22px;background:#fff;box-shadow:0 30px 60px -20px rgba(0,0,0,.35);overflow:hidden}
-.meta .num{font-family:var(--mono);font-size:13px;color:var(--ink-soft);letter-spacing:.06em}
+.meta .num{font-family:var(--mono);font-size:14px;color:var(--ink-soft);letter-spacing:.06em}
 .meta h3{font-family:var(--serif);font-size:clamp(30px,4vw,54px);font-weight:400;line-height:1.08;margin:12px 0 20px;letter-spacing:-.01em}
 .meta .desc{color:var(--ink-soft);max-width:42ch;font-size:16.5px}
 .meta .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
-.meta .tags span{font-family:var(--mono);font-size:11.5px;border:1px solid var(--line);border-radius:20px;padding:6px 13px;color:var(--ink-soft)}
+.meta .tags span{font-family:var(--mono);font-size:14px;border:1px solid var(--line);border-radius:20px;padding:6px 13px;color:var(--ink-soft)}
 .go{display:inline-flex;align-items:center;gap:10px;margin-top:26px;font-weight:600;font-size:15px}
 .go .circle{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;transition:transform .4s cubic-bezier(.2,.8,.2,1),background .3s}
 .proj:hover .go .circle{transform:rotate(45deg);background:var(--accent)}
@@ -141,15 +141,15 @@ html[data-theme="dark"] .theme-toggle .moon{opacity:1;transform:none}
 /* ---------- about teaser ---------- */
 .about{padding:clamp(70px,9vw,130px) clamp(20px,4vw,56px);display:grid;grid-template-columns:0.92fr 1.08fr;gap:clamp(30px,5vw,72px);align-items:start}
 .about .portrait{position:relative;aspect-ratio:4/5;border-radius:20px;overflow:hidden;background:linear-gradient(150deg,var(--t5),var(--t4));max-width:460px;width:100%}
-.about .portrait .ph{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:12px;color:rgba(0,0,0,.7);text-align:center;padding:20px}
+.about .portrait .ph{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:14px;color:rgba(0,0,0,.7);text-align:center;padding:20px}
 .about .portrait .np{position:absolute;bottom:16px;right:16px;z-index:4;display:flex;align-items:center;gap:11px;text-decoration:none}
 .about .portrait .np .cap{background:var(--paper);border-radius:30px;padding:9px 15px;box-shadow:0 12px 30px -12px rgba(0,0,0,.4);
   display:flex;flex-direction:column;gap:2px;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
-.about .portrait .np .cap .lbl{font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-soft);
+.about .portrait .np .cap .lbl{font-family:var(--mono);font-size:14px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-soft);
   display:flex;align-items:center;gap:6px;line-height:1}
-.about .portrait .np .cap .song{font-family:var(--serif);font-size:13.5px;color:var(--ink);line-height:1.12;white-space:nowrap}
+.about .portrait .np .cap .song{font-family:var(--serif);font-size:14px;color:var(--ink);line-height:1.12;white-space:nowrap}
 .about .portrait .np .cap .song .by{color:var(--ink-soft);font-style:italic}
-.about .portrait .np .cap .song .ext{color:var(--ink-soft);font-family:var(--mono);font-size:11px}
+.about .portrait .np .cap .song .ext{color:var(--ink-soft);font-family:var(--mono);font-size:14px}
 .about .portrait .np .eq{display:inline-flex;align-items:flex-end;gap:1.5px;height:9px}
 .about .portrait .np .eq i{width:2px;height:40%;background:var(--accent);border-radius:1px;animation:eqbar .9s ease-in-out infinite}
 .about .portrait .np .eq i:nth-child(2){animation-delay:.28s}
@@ -172,7 +172,7 @@ html[data-theme="dark"] .theme-toggle .moon{opacity:1;transform:none}
 .about p{margin-top:22px;color:var(--ink-soft);font-size:17.5px;max-width:52ch}
 .about .skills{margin-top:38px;padding-top:32px;border-top:1px solid var(--line);
   display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,2.6vw,38px)}
-.about .skills .k{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:14px}
+.about .skills .k{font-family:var(--mono);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:14px}
 .about .skills ul{list-style:none}
 .about .skills li{font-size:14.5px;color:var(--ink);line-height:1.62}
 .about .actions{display:flex;gap:16px;margin-top:30px;flex-wrap:wrap}
@@ -189,7 +189,7 @@ html.loaded footer{visibility:visible}
 footer{padding:60px clamp(20px,4vw,56px) 40px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px}
 footer .big{font-family:var(--serif);font-size:clamp(34px,7vw,90px);line-height:.95;font-weight:400}
 footer .big .it{font-style:italic;color:var(--accent)}
-footer .col{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);line-height:2}
+footer .col{font-family:var(--mono);font-size:14px;color:var(--ink-soft);line-height:2}
 footer .col a:hover{color:var(--accent)}
 
 /* reveal */
