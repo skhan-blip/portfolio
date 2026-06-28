@@ -152,7 +152,6 @@ html[data-theme="dark"] .theme-toggle .moon{opacity:1;transform:none}
 .blk{margin-bottom:clamp(40px,5vw,72px)}
 .blk.lead p{font-family:var(--serif);font-size:clamp(24px,3vw,34px);line-height:1.34;letter-spacing:-.01em;color:var(--ink)}
 .blk h2{font-family:var(--serif);font-size:clamp(26px,3.4vw,40px);font-weight:400;letter-spacing:-.01em;margin-bottom:20px}
-.blk h2 .mk{display:inline-block;width:26px;height:2px;background:var(--accent);vertical-align:middle;margin-right:14px;transform:translateY(-7px)}
 .blk p{font-size:18px;line-height:1.62;color:var(--ink-soft);margin-bottom:16px;text-wrap:pretty}
 .blk p:last-child{margin-bottom:0}
 .blk p strong{color:var(--ink);font-weight:600}
@@ -311,7 +310,7 @@ C.sections.forEach(s=>{
     html+=`<div class="blk lead reveal"><p>${s.t}</p></div>`;
   }else if(s.k==='text'){
     openBody();
-    html+=`<div class="blk reveal"><h2><span class="mk"></span>${s.h}</h2>${s.p.map(p=>`<p>${p}</p>`).join('')}</div>`;
+    html+=`<div class="blk reveal"><h2>${s.h}</h2>${s.p.map(p=>`<p>${p}</p>`).join('')}</div>`;
   }else if(s.k==='note'){
     openBody();
     html+=`<div class="blk reveal" style="margin-bottom:0"></div></div>`;bodyOpen=false;
