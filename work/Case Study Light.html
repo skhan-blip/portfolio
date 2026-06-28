@@ -100,18 +100,15 @@ img{display:block;max-width:100%}
 
 /* nav */
 nav{position:fixed;top:0;left:0;right:0;z-index:120;display:flex;align-items:center;justify-content:space-between;
-  padding:18px clamp(20px,4vw,56px);background:color-mix(in oklab,var(--paper) 78%,transparent);
+  padding:20px clamp(20px,4vw,56px);background:color-mix(in oklab,var(--paper) 78%,transparent);
   backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .4s,background .4s}
 nav.scrolled{border-bottom-color:var(--line)}
 nav .brand{font-family:var(--serif);font-size:23px;letter-spacing:.01em;white-space:nowrap}
 nav .brand b{font-weight:400}
-nav .links{display:flex;gap:26px;align-items:center;font-size:15px}
+nav .links{display:flex;gap:28px;align-items:center;font-size:15px}
 nav .links a{position:relative;padding:4px 0}
 nav .links a .u{position:absolute;left:0;bottom:0;height:1.5px;width:100%;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 nav .links a:hover .u{transform:scaleX(1)}
-.avail{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;color:var(--ink-soft)}
-.avail .dot{width:8px;height:8px;border-radius:50%;background:#3FbF7F;position:relative}
-.avail .dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:#3FbF7F;animation:ping 2s ease-out infinite}
 @keyframes ping{0%{transform:scale(1);opacity:.7}100%{transform:scale(2.6);opacity:0}}
 .theme-toggle{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);
   cursor:pointer;display:grid;place-items:center;position:relative;transition:background .3s,transform .3s,border-color .3s;font-size:15px;line-height:1;flex-shrink:0}
@@ -232,8 +229,7 @@ footer .col a:hover{color:var(--accent)}
   .metrics{grid-template-columns:1fr;text-align:center}
   .pn-grid{grid-template-columns:1fr}
   .pn a.next{border-left:0;border-top:1px solid var(--line);padding-left:0;text-align:left}
-  nav .links{gap:16px}
-  nav .links .hide-sm{display:none}
+  nav .links{gap:18px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important}.reveal{opacity:1;transform:none}html{scroll-behavior:auto}}
 </style>
