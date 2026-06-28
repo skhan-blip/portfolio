@@ -126,9 +126,9 @@ const CASES = {
         "I applied NEA's updated branding and built a component and design library so the interface could evolve with new brand guidelines — reinforcing visual consistency and the app's credibility." ] },
       { k: "fig", img: CDN + "baa25949-e263-464e-b215-3f7dcd033de6/NEA-hifi-examples.png", cap: "Examples of high-fidelity screens" },
       { k: "metrics", items: [
-        { big: "4.5★", label: "highest-rated eczema tracker, across 273 reviews" },
-        { big: "2×", label: "Platinum eHealthcare Leadership Awards (2022)" },
-        { big: "Gold", label: "Digital Health Award (2024)" } ] },
+        { big: "4.5★", label: "highest-rated eczema tracker on the market" },
+        { big: "18K", label: "new EczemaWise users joined after app launch" },
+        { big: "2×", label: "Platinum eHealthcare Leadership Awards (2022)" } ] },
       { k: "text", h: "Product launch", p: [
         "EczemaWise launched on both <strong>iOS and Android</strong>. As the first iteration, I oversaw the launch from a design perspective and worked closely with developers and stakeholders to resolve issues.",
         "Since release it has earned two Platinum eHealthcare Leadership Awards and a Gold Digital Health Award, and is currently the highest-rated eczema tracker on the market — helping thousands of people manage their symptoms more effectively." ] },
