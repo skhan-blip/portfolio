@@ -52,6 +52,7 @@ const CASES = {
         "I built low- to medium-fidelity prototypes of each flow and ran <strong>A/B testing</strong>, comparing steps to completion, ease of use, and task-success rates.",
         "Users liked the flexibility of Version B, but noted their real workflow: they scan the <em>package</em> and count quantity manually rather than scanning each piece. So we shipped <strong>Version A for the MVP</strong> and kept Version B on the roadmap for a future release." ] },
       { k: "fig", img: CDN + "635727ef-e63d-472f-8506-93e99e393a53/BarcodeFlow-VersionA+%281%29.png", cap: "Version A prototype (shipped) — warehouse page, barcode scanner, and scanned-item detail modal" },
+      { k: "fig", img: "../assets/BarcodeFlow-VersionB.webp", cap: "Version B Prototype (proposed) — User automatically counts item with each scan and can adjust quantity" },
       { k: "text", h: "Accounting for every screen state", p: [
         "With the core flow validated, I designed for edge cases and errors. The critical one: a scanned barcode that isn't in the vendor's pricebook, which would otherwise dead-end the user.",
         "I designed a recovery path — an unregistered scan routes the user to the pricebook, where they search, select, and link the barcode, then return to scanning <strong>without breaking their flow</strong>." ] },
