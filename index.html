@@ -68,9 +68,10 @@ nav .links{display:flex;gap:28px;align-items:center;font-size:15px}
 nav .links a{position:relative;padding:4px 0}
 nav .links a .u{position:absolute;left:0;bottom:0;height:1.5px;width:100%;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 nav .links a:hover .u{transform:scaleX(1)}
-nav .links a .li-icon{height:18px;width:auto;display:block;filter:var(--li-filter)}
+nav .links a:has(.li-icon){display:inline-flex;align-items:center;padding:4px 0}
+nav .links a .li-icon{height:15px;width:auto;display:block;filter:var(--li-filter);flex-shrink:0}
 :root{--li-filter:none}
-html[data-theme="dark"] {--li-filter:invert(1)}
+html[data-theme="dark"]{--li-filter:invert(1)}
 .theme-toggle{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;display:grid;place-items:center;position:relative;transition:background .3s,transform .3s,border-color .3s;font-size:15px;line-height:1;flex-shrink:0}
 .theme-toggle:hover{transform:translateY(-2px) rotate(10deg);border-color:var(--accent)}
 .theme-toggle .ico{position:absolute;transition:opacity .35s,transform .45s cubic-bezier(.34,1.56,.64,1)}
