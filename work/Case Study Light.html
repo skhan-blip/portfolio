@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Case Study — Sharukh Khan</title>
+<title>Case Study | Sharukh Khan</title>
 <link rel="icon" type="image/x-icon" href="../favicon.ico" />
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png" />
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png" />
@@ -73,7 +73,7 @@ img{display:block;max-width:100%}
   display:grid;place-items:center;cursor:pointer;opacity:0;transition:opacity .35s ease,background .25s,transform .25s}
 .lightbox.shown .lb-close{opacity:1}
 .lightbox .lb-close:hover{background:rgba(255,255,255,.18);transform:rotate(90deg)}
-/* rotate-to-fullscreen hint — touch devices, portrait only */
+/* rotate-to-fullscreen hint - touch devices, portrait only */
 .lightbox .lb-rotate{position:fixed;left:50%;bottom:max(22px,env(safe-area-inset-bottom));
   transform:translateX(-50%) translateY(8px);display:none;align-items:center;gap:8px;z-index:3;
   font-family:var(--mono);font-size:14px;letter-spacing:.04em;color:rgba(255,255,255,.74);
@@ -277,7 +277,7 @@ const params=new URLSearchParams(location.search);
 let id=params.get('id');
 if(!id||!CASES[id])id='servicetitan';
 const C=CASES[id];
-document.title=C.title+" — Sharukh Khan";
+document.title=C.title+" | Sharukh Khan";
 
 /* ---------- render hero ---------- */
 const esc=s=>s;
@@ -346,9 +346,9 @@ const prev=i>0?CASES[ORDER[i-1]]:null;
 const next=i<ORDER.length-1?CASES[ORDER[i+1]]:null;
 html+=`<div class="pn"><div class="pn-grid">
   <a class="prev ${prev?'':'disabled'}" href="${prev?`?id=${ORDER[i-1]}`:'#'}" data-cursor>
-    <div class="lab">← Previous</div><div class="nm">${prev?prev.name:'—'}</div></a>
+    <div class="lab">← Previous</div><div class="nm">${prev?prev.name:'None'}</div></a>
   <a class="next ${next?'':'disabled'}" href="${next?`?id=${ORDER[i+1]}`:'#'}" data-cursor>
-    <div class="lab">Next →</div><div class="nm">${next?next.name:'—'}</div></a>
+    <div class="lab">Next →</div><div class="nm">${next?next.name:'None'}</div></a>
 </div></div>`;
 
 document.getElementById('cs').innerHTML=html;
